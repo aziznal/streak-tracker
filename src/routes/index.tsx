@@ -1,39 +1,33 @@
-import { createFileRoute } from '@tanstack/react-router'
-import logo from '../logo.svg'
+import { StreakTracker } from "@/lib/components/StreakTracker";
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute("/")({
   component: App,
-})
+});
 
 function App() {
   return (
-    <div className="text-center">
-      <header className="min-h-screen flex flex-col items-center justify-center bg-[#282c34] text-white text-[calc(10px+2vmin)]">
-        <img
-          src={logo}
-          className="h-[40vmin] pointer-events-none animate-[spin_20s_linear_infinite]"
-          alt="logo"
-        />
-        <p>
-          Edit <code>src/routes/index.tsx</code> and save to reload.
+    <div className="h-dvh flex items-center justify-center flex-col">
+      <div className="flex-1 flex flex-col justify-end">
+        <h1 className="text-2xl font-bold mb-6">Streak Tracker (wip)</h1>
+
+        <div className="border p-4 rounded-lg">
+          <StreakTracker values={[new Date(Date.now())]} />
+        </div>
+      </div>
+
+      <footer className="flex-1 flex flex-col justify-end">
+        <p className="pb-16">
+          Made by{" "}
+          <a
+            href="https://aziznal.com"
+            target="_blank"
+            className="text-rose-600"
+          >
+            aziznal
+          </a>
         </p>
-        <a
-          className="text-[#61dafb] hover:underline"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <a
-          className="text-[#61dafb] hover:underline"
-          href="https://tanstack.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn TanStack
-        </a>
-      </header>
+      </footer>
     </div>
-  )
+  );
 }
