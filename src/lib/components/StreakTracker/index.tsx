@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { getDateArrayFromRange } from "./utils";
 
 // ideas for features:
 // - resolution: decide whether it counts by days vs hours / weeks / months etc.
@@ -13,33 +14,38 @@ export const StreakTracker: React.FC<{
   values: Date[];
   onValueChange?: (newValue: Date[]) => void;
 }> = (props) => {
-  const totalCount = 365;
-
   const shouldFill = (date: Date) => {
-    return Math.random() > 0.8;
+    return props.values.includes(date);
   };
 
-  const boxValues = Array(totalCount)
-    .fill(0)
-    .map((_, i) => ({
+  const start = props.values[0];
+  const end = props.values[props.values.length - 1];
+  const steps = 12;
+
+  const boxValues = getDateArrayFromRange({ start, end, step: "day" }).map(
+    (date, i) => ({
       index: i,
-      isFilled: shouldFill(props.values[i]),
-    }));
+      isFilled: shouldFill(date),
+    }),
+  );
 
   return (
-    <div
-      className={cn(
-        props.className,
-        "flex flex-col gap-[3px] flex-wrap max-h-[120px]",
-      )}
-    >
-      {boxValues.map((box) => (
-        <EntryBox
-          isFilled={box.isFilled}
-          showNumber={false}
-          number={box.index}
-        />
-      ))}
+    <div>
+      <div
+        className={cn(
+          props.className,
+          "flex flex-col gap-[3px] flex-wrap max-h-[120px]",
+        )}
+      >
+        {boxValues.map((box) => (
+          <EntryBox
+            key={box.index}
+            isFilled={box.isFilled}
+            showNumber={false}
+            number={box.index}
+          />
+        ))}
+      </div>
     </div>
   );
 };
