@@ -8,6 +8,13 @@ import {
 } from "@/components/ui/tooltip";
 import { useCallback, useMemo } from "react";
 
+// BUGS:
+// 1. Duplicate month labels
+
+// TODO:
+// 1. Day labels on the left
+// 2. Better default overlay content (use day names)
+
 /**
  * Visualize continuity of given date values (which can include time)
  */
@@ -60,7 +67,7 @@ export const StreakTracker: React.FC<{
   }, [boxValues]);
 
   return (
-    <div>
+    <div className={props.className}>
       <div className="flex flex-row gap-[3px] mb-2">
         <TooltipProvider delayDuration={1000}>
           {weeks.map((week, weekIndex) => (
