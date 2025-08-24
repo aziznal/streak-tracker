@@ -45,13 +45,13 @@ function App() {
     <div className="min-h-dvh flex items-center flex-col mt-12">
       <h1 className="text-center text-3xl font-black mb-8">Streak Tracker</h1>
 
-      <div className="flex flex-col gap-8 mb-24">
+      <div className="flex flex-col gap-8 mb-24 w-full max-w-fit">
         <section>
           <div className="text-muted-foreground mb-2 text-sm italic">
             01 Jan 2025 to 31 Dec 2025 (exactly 1 year) - Try clicking values!
           </div>
 
-          <div className="border p-4 rounded-lg">
+          <div className="border p-4 rounded-lg overflow-x-auto">
             <StreakTracker values={values} onClick={toggleValue} />
           </div>
         </section>
@@ -61,7 +61,7 @@ function App() {
             01 August 2025 to 01 December 2025 (3 months)
           </div>
 
-          <div className="border p-4 rounded-lg">
+          <div className="border p-4 rounded-lg overflow-x-auto">
             <StreakTracker values={aug01_dec01_values} />
           </div>
         </section>
@@ -71,7 +71,7 @@ function App() {
             Scattered days (spanning 5 years)
           </div>
 
-          <div className="border p-4 rounded-lg">
+          <div className="border p-4 rounded-lg overflow-x-auto">
             <StreakTracker values={scatteredDays} />
           </div>
         </section>
