@@ -12,7 +12,7 @@ import { useCallback, useMemo } from "react";
 // 1. Duplicate month labels
 
 // TODO:
-// 1. Day labels on the left
+// 1. Day labels on the left ✅
 // 2. Better default overlay content (use day names)
 
 /**
@@ -46,15 +46,34 @@ export const StreakTracker: React.FC<{
     [props.values],
   );
 
-  const boxValues = useMemo(
-    () =>
-      getDateArrayFromRange({ start, end, step: "day" }).map((date, i) => ({
+  const boxValues = useMemo(() => {
+    const values = getDateArrayFromRange({ start, end, step: "day" }).map(
+      (date, i) => ({
         index: i,
         date,
         isFilled: doDatesMatch(date),
-      })),
-    [doDatesMatch, end, start],
-  );
+        isBlank: false,
+      }),
+    );
+
+    // JS: Sunday=0 … Saturday=6
+    const startDay = start.getDay();
+    // how many blanks to prepend so first real date lands on Saturday
+    const blanksNeeded = (startDay + 1) % 7;
+
+    const backfill = Array.from({ length: blanksNeeded }, (_, i) => {
+      const d = new Date(start);
+      d.setDate(start.getDate() - (blanksNeeded - i));
+      return {
+        index: -1 - i,
+        date: d,
+        isFilled: false,
+        isBlank: true,
+      };
+    });
+
+    return [...backfill, ...values];
+  }, [doDatesMatch, end, start]);
 
   const weeks = useMemo(() => {
     const agg: (typeof boxValues)[] = [];
@@ -75,26 +94,43 @@ export const StreakTracker: React.FC<{
               <div className="text-sm text-muted-foreground h-[20px] w-0">
                 {weekIndex % 4 === 0 && (
                   <>
-                    {week[week.length - 1].date.toLocaleString("default", {
+                    {week[week.length - 1].date?.toLocaleString("default", {
                       month: "short",
                     })}
                   </>
                 )}
               </div>
 
-              {week.map((box) => (
-                <Tooltip key={box.index}>
-                  <TooltipTrigger>
-                    <EntryBox
-                      isFilled={box.isFilled}
-                      showNumber={false}
-                      number={box.index}
-                      onClick={() => props.onClick?.(box.date)}
-                    />
-                  </TooltipTrigger>
+              {week.map((box, boxIndex) => (
+                <div className="flex items-center justify-end gap-3">
+                  {weekIndex === 0 && boxIndex !== 0 && boxIndex % 2 === 0 && (
+                    <div className="h-[12px] text-end leading-0 flex items-center justify-center text-muted-foreground">
+                      {box.date?.toLocaleString("default", {
+                        weekday: "short",
+                      })}
+                    </div>
+                  )}
 
-                  <TooltipContent>{box.date.toLocaleString()}</TooltipContent>
-                </Tooltip>
+                  {!box.isBlank && box.date !== null && (
+                    <Tooltip key={box.index}>
+                      <TooltipTrigger>
+                        <EntryBox
+                          isFilled={box.isFilled}
+                          showNumber={false}
+                          number={box.index}
+                          onClick={() => props.onClick?.(box.date)}
+                        />
+                      </TooltipTrigger>
+
+                      <TooltipContent>
+                        {box.date.toLocaleString()}
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
+
+                  {box.date === null ||
+                    (box.isBlank && <div className="w-[12px] h-[12px]" />)}
+                </div>
               ))}
             </div>
           ))}
