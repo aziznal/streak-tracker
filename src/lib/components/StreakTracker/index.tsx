@@ -9,7 +9,7 @@ import {
 import { useCallback, useMemo } from "react";
 
 // BUGS:
-// 1. Duplicate month labels
+// 1. Duplicate month labels ✅
 
 // TODO:
 // 1. Day labels on the left ✅
@@ -106,7 +106,12 @@ export const StreakTracker: React.FC<{
             <div key={`week-${weekIndex}`} className="flex flex-col gap-[3px]">
               {/* Month label*/}
               <div className="text-xs text-muted-foreground h-[20px] w-0">
-                {weekIndex % 4 === 0 && (
+                {week.some(
+                  (box) =>
+                    box.date.toLocaleString("default", {
+                      day: "numeric",
+                    }) === "1",
+                ) && (
                   <>
                     {week[week.length - 1].date?.toLocaleString("default", {
                       month: "short",
