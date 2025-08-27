@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { getDateArrayFromRange } from "./utils";
+import { getDateArrayFromRange, getStandardWeekdays } from "./utils";
 import {
   Tooltip,
   TooltipContent,
@@ -13,7 +13,8 @@ import { useCallback, useMemo } from "react";
 
 // TODO:
 // 1. Day labels on the left ✅
-// 2. Better default overlay content (use day names)
+// 2. Better default overlay content (use day names) ✅
+// 3. Year selector
 
 /**
  * Visualize continuity of given date values (which can include time)
@@ -89,9 +90,22 @@ export const StreakTracker: React.FC<{
     <div className={props.className}>
       <div className="flex flex-row gap-[3px] mb-2">
         <TooltipProvider delayDuration={1000}>
+          {/* Day labels on the left */}
+          <div className="flex flex-col gap-[3px] mt-2">
+            {getStandardWeekdays().map((day, i) => (
+              <div
+                key={`weekday-label-${i}`}
+                className="h-[12px] text-xs leading-0 flex items-center text-muted-foreground"
+              >
+                {i !== 0 && i % 2 === 0 && <>{day}</>}
+              </div>
+            ))}
+          </div>
+
           {weeks.map((week, weekIndex) => (
-            <div key={weekIndex} className="flex flex-col gap-[3px]">
-              <div className="text-sm text-muted-foreground h-[20px] w-0">
+            <div key={`week-${weekIndex}`} className="flex flex-col gap-[3px]">
+              {/* Month label*/}
+              <div className="text-xs text-muted-foreground h-[20px] w-0">
                 {weekIndex % 4 === 0 && (
                   <>
                     {week[week.length - 1].date?.toLocaleString("default", {
@@ -101,18 +115,11 @@ export const StreakTracker: React.FC<{
                 )}
               </div>
 
-              {week.map((box, boxIndex) => (
+              {/* Box columns */}
+              {week.map((box) => (
                 <div className="flex items-center justify-end gap-3">
-                  {weekIndex === 0 && boxIndex !== 0 && boxIndex % 2 === 0 && (
-                    <div className="h-[12px] text-end leading-0 flex items-center justify-center text-muted-foreground">
-                      {box.date?.toLocaleString("default", {
-                        weekday: "short",
-                      })}
-                    </div>
-                  )}
-
                   {!box.isBlank && box.date !== null && (
-                    <Tooltip key={box.index}>
+                    <Tooltip key={`box-${box.index}`}>
                       <TooltipTrigger>
                         <EntryBox
                           isFilled={box.isFilled}
@@ -123,7 +130,17 @@ export const StreakTracker: React.FC<{
                       </TooltipTrigger>
 
                       <TooltipContent>
-                        {box.date.toLocaleString()}
+                        <span className="mr-1">
+                          {box.date.toLocaleString("default", {
+                            month: "long",
+                          })}
+                        </span>
+
+                        <span>
+                          {box.date.toLocaleString("default", {
+                            day: "numeric",
+                          })}
+                        </span>
                       </TooltipContent>
                     </Tooltip>
                   )}
@@ -167,9 +184,9 @@ const EntryBox: React.FC<{
   return (
     <div
       className={cn(
-        "h-[12px] w-[12px] rounded bg-neutral-900 cursor-pointer",
-        !props.isFilled && "hover:bg-neutral-700",
-        props.isFilled && "bg-green-500 hover:bg-green-300",
+        "h-[12px] w-[12px] rounded-[3px] bg-neutral-900 border cursor-pointer",
+        !props.isFilled && "hover:bg-neutral-600 border-neutral-800/50",
+        props.isFilled && "bg-green-700 hover:bg-green-300",
         props.className,
       )}
       onClick={props.onClick}

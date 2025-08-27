@@ -15,3 +15,15 @@ export function getDateArrayFromRange(args: {
 
   return result;
 }
+
+export function getStandardWeekdays() {
+  const base = new Date(2025, 0, 4); // this is a Saturday
+
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(base);
+    d.setDate(base.getDate() + i);
+    return d.toLocaleString("default", { weekday: "short" });
+  });
+}
+
+// ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
