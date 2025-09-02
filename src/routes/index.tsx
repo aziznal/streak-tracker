@@ -5,13 +5,14 @@ import { useState } from "react";
 
 export const Route = createFileRoute("/")({
   component: App,
+  ssr: false,
 });
 
 function App() {
   const [values, setValues] = useState<Date[]>(
     getDateArrayFromRange({
-      start: new Date("01-01-2025"),
-      end: new Date("12-31-2025"),
+      start: new Date("2025-01-01T00:00:00Z"),
+      end: new Date("2025-12-31T23:59:59Z"),
       step: "day",
     }).filter(() => Math.random() > 0.5),
   );
@@ -28,17 +29,17 @@ function App() {
   };
 
   const aug01_dec01_values = getDateArrayFromRange({
-    start: new Date("08-01-2025"),
-    end: new Date("12-01-2025"),
+    start: new Date("2025-08-01T00:00:00Z"),
+    end: new Date("2025-12-01T00:00:00Z"),
     step: "day",
   });
 
   const scatteredDays = [
-    new Date("08-01-2024"),
-    new Date("09-06-2024"),
-    new Date("03-06-2025"),
-    new Date("07-25-2026"),
-    new Date("07-25-2029"),
+    new Date("2024-08-01T00:00:00Z"),
+    new Date("2024-09-06T00:00:00Z"),
+    new Date("2025-03-06T00:00:00Z"),
+    new Date("2026-07-25T00:00:00Z"),
+    new Date("2029-07-25T00:00:00Z"),
   ];
 
   return (

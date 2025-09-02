@@ -1,12 +1,12 @@
 import { cn } from "@/lib/utils";
 import { getDateArrayFromRange, getStandardWeekdays } from "./utils";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { useCallback, useMemo } from "react";
+import {
+  AppTooltipProvider,
+  AppTooltip,
+  AppTooltipTrigger,
+  AppTooltipContent,
+} from "../ui/tooltip";
 
 // BUGS:
 // 1. Duplicate month labels ✅
@@ -89,7 +89,7 @@ export const StreakTracker: React.FC<{
   return (
     <div className={props.className}>
       <div className="flex flex-row gap-[3px] mb-2">
-        <TooltipProvider delayDuration={1000}>
+        <AppTooltipProvider delayDuration={1000}>
           {/* Day labels on the left */}
           <div className="flex flex-col gap-[3px] mt-2">
             {getStandardWeekdays().map((day, i) => (
@@ -122,19 +122,21 @@ export const StreakTracker: React.FC<{
 
               {/* Box columns */}
               {week.map((box) => (
-                <div className="flex items-center justify-end gap-3">
+                <div 
+                  key={`box-column-${box.date}`}
+                  className="flex items-center justify-end gap-3">
                   {!box.isBlank && box.date !== null && (
-                    <Tooltip key={`box-${box.index}`}>
-                      <TooltipTrigger>
+                    <AppTooltip key={`box--${box.date}-${box.index}`}>
+                      <AppTooltipTrigger>
                         <EntryBox
                           isFilled={box.isFilled}
                           showNumber={false}
                           number={box.index}
                           onClick={() => props.onClick?.(box.date)}
                         />
-                      </TooltipTrigger>
+                      </AppTooltipTrigger>
 
-                      <TooltipContent>
+                      <AppTooltipContent>
                         <span className="mr-1">
                           {box.date.toLocaleString("default", {
                             month: "long",
@@ -146,8 +148,8 @@ export const StreakTracker: React.FC<{
                             day: "numeric",
                           })}
                         </span>
-                      </TooltipContent>
-                    </Tooltip>
+                      </AppTooltipContent>
+                    </AppTooltip>
                   )}
 
                   {box.date === null ||
@@ -156,7 +158,7 @@ export const StreakTracker: React.FC<{
               ))}
             </div>
           ))}
-        </TooltipProvider>
+        </AppTooltipProvider>
       </div>
 
       <div className="text-muted-foreground text-sm text-center">
