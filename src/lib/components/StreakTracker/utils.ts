@@ -16,6 +16,7 @@ export function getDateArrayFromRange(args: {
   return result;
 }
 
+/** Returns localized list of weekdays */
 export function getStandardWeekdays() {
   const base = new Date(2025, 0, 4); // this is a Saturday
 
@@ -26,4 +27,6 @@ export function getStandardWeekdays() {
   });
 }
 
-// ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+export function isSpanningMultipleYears(dates: Date[]) {
+  return new Set(dates.map((date) => date.getFullYear())).size > 1;
+}

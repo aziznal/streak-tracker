@@ -1,4 +1,7 @@
-import { StreakTracker } from "@/lib/components/StreakTracker";
+import {
+  StreakTracker,
+  StreakTrackerYearSelector,
+} from "@/lib/components/StreakTracker";
 import { getDateArrayFromRange } from "@/lib/components/StreakTracker/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
@@ -41,6 +44,7 @@ function App() {
     new Date("2026-07-25T00:00:00Z"),
     new Date("2029-07-25T00:00:00Z"),
   ];
+  const [selectedYear, setSelectedYear] = useState(2024);
 
   return (
     <div className="min-h-dvh flex items-center flex-col mt-12">
@@ -72,8 +76,18 @@ function App() {
             Scattered days (spanning 5 years)
           </div>
 
-          <div className="border p-4 rounded-lg overflow-x-auto">
-            <StreakTracker values={scatteredDays} />
+          <div className="border p-4 rounded-lg overflow-x-auto flex gap-4">
+            <StreakTracker
+              values={scatteredDays.filter(
+                (date) => date.getFullYear() === selectedYear,
+              )}
+            />
+
+            <StreakTrackerYearSelector
+              dates={scatteredDays}
+              value={selectedYear}
+              onValueChange={setSelectedYear}
+            />
           </div>
         </section>
       </div>
