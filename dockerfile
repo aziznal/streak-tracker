@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y git curl ca-certificates bash && \
 
 FROM base AS build
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN corepack install
 RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
     pnpm install --frozen-lockfile
@@ -30,5 +30,4 @@ HEALTHCHECK --interval=10s --timeout=3s \
 EXPOSE 3000
 
 CMD ["pnpm", "run", "start"]
-
 
