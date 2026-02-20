@@ -1,6 +1,6 @@
 import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { TanstackDevtools } from "@tanstack/react-devtools";
+import { TanStackDevtools } from "@tanstack/react-devtools";
 
 import appCss from "../styles.css?url";
 
@@ -39,7 +39,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body className="dark antialiased">
         {children}
 
-        <TanstackDevtools
+        <TanStackDevtools
           config={{
             position: "bottom-left",
           }}
